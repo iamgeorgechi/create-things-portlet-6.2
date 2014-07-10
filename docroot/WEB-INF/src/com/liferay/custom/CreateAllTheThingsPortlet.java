@@ -2,6 +2,7 @@ package com.liferay.custom;
 
 import com.liferay.portal.DuplicateGroupException;
 import com.liferay.portal.DuplicateOrganizationException;
+import com.liferay.portal.DuplicateRoleException;
 import com.liferay.portal.DuplicateUserScreenNameException;
 import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.NoSuchOrganizationException;
@@ -13,6 +14,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -24,6 +26,7 @@ import com.liferay.portal.model.OrgLabor;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Phone;
 import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.security.auth.PrincipalException;
@@ -33,6 +36,7 @@ import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.OrganizationServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.RoleServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserServiceUtil;
@@ -58,7 +62,8 @@ import java.util.Map;
  */
 public class CreateAllTheThingsPortlet extends MVCPortlet {
 	@Override
-	public void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
+	public void processAction(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws IOException, PortletException {
 
 		String tab = actionRequest.getParameter("tab");
@@ -81,12 +86,16 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		else if (tab.equals("Create Documents")) {
 			createDocuments(actionRequest, actionResponse);
 		}
+		else if (tab.equals("Create Roles")) {
+			createRoles(actionRequest, actionResponse);
+		}
 
 		actionResponse.setRenderParameter("tabs1", tab);
 		super.processAction(actionRequest, actionResponse);
 	}
 
-	private void createOrganizations(ActionRequest actionRequest, ActionResponse actionResponse) {
+	private void createOrganizations(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
 		String numberOfOrganizations = actionRequest.getParameter("numberOfOrganizations");
 		String baseOrganizationName = actionRequest.getParameter("baseOrganizationName");
@@ -157,7 +166,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 	}
 
-	private void createSites(ActionRequest actionRequest, ActionResponse actionResponse) {
+	private void createSites(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
 		String numberOfSites = actionRequest.getParameter("numberOfSites");
 		String baseSiteName = actionRequest.getParameter("baseSiteName");
@@ -220,7 +230,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 	}
 
-	private void createPages(ActionRequest actionRequest, ActionResponse actionResponse) {
+	private void createPages(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
 		String numberOfPages = actionRequest.getParameter("numberOfPages");
 		String basePage = actionRequest.getParameter("basePage");
@@ -325,7 +336,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 	}
 
-	private void createUsers(ActionRequest actionRequest, ActionResponse actionResponse) {
+	private void createUsers(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
 		String companyIdString = actionRequest.getParameter("companyId");
 		String numberOfUsers = actionRequest.getParameter("numberOfUsers");
@@ -457,7 +469,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 	}
 
-	private void createWebContentArticles(ActionRequest actionRequest, ActionResponse actionResponse) {
+	private void createWebContentArticles(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
 		String numberOfArticles = actionRequest.getParameter("numberOfArticles");
 		String baseArticle = actionRequest.getParameter("baseArticle");
@@ -491,9 +504,6 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 				Locale defaultLocale = LocaleUtil.fromLanguageId(languageId);
 
-				Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
-				descriptionMap.put(defaultLocale, StringPool.BLANK);
-
 				for (int i = 1; i <= Integer.parseInt(numberOfArticles); i++) {
 					if (Integer.parseInt(numberOfArticles) >= 100) {
 						if (i == (int) (Double.parseDouble(numberOfArticles) * (loader / 100))) {
@@ -508,6 +518,9 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 					Map<Locale, String> titleMap = new HashMap<Locale, String>();
 					titleMap.put(defaultLocale, title.toString());
+
+					Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+					descriptionMap.put(defaultLocale, title.toString());
 
 					StringBundler content = new StringBundler(4);
 					content.append("<?xml version='1.0' encoding='UTF-8'?>");
@@ -588,7 +601,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 	}
 
-	private void createDocuments(ActionRequest actionRequest, ActionResponse actionResponse) {
+	private void createDocuments(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
 
 		String numberOfDocuments = actionRequest.getParameter("numberOfDocuments");
 		String baseDocument = actionRequest.getParameter("baseDocument");
@@ -606,7 +620,9 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					groupId = Long.parseLong(defaultGroupId);
 				}
 				else {
-					for (Group targetGroup : GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+					for (Group targetGroup : GroupLocalServiceUtil.getGroups(
+							QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+
 						if (groupDescriptiveName.equals(targetGroup.getDescriptiveName())) {
 							groupId = targetGroup.getGroupId();
 							break;
@@ -678,5 +694,95 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(CreateAllTheThingsPortlet.class);
+	private void createRoles(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
+
+		String numberOfRoles = actionRequest.getParameter("numberOfRoles");
+		String baseRole = actionRequest.getParameter("baseRole");
+		String languageId = actionRequest.getParameter("languageId");
+		String roleType = actionRequest.getParameter("roleType");
+
+		double loader = 10;
+
+		int type = 0;
+
+		if (roleType.equals(RoleConstants.TYPE_REGULAR_LABEL)) {
+			type = RoleConstants.TYPE_REGULAR;
+		}
+		else if (roleType.equals(RoleConstants.TYPE_ORGANIZATION_LABEL)) {
+			type = RoleConstants.TYPE_ORGANIZATION;
+		}
+		else if (roleType.equals(RoleConstants.TYPE_SITE_LABEL)) {
+			type = RoleConstants.TYPE_SITE;
+		}
+
+		try{
+			if (Validator.isNotNull(numberOfRoles) && Validator.isNotNull(baseRole)) {
+
+				_log.info("Starting to create " + numberOfRoles + " web content articles");
+
+				ServiceContext serviceContext = ServiceContextFactory.getInstance(
+					Role.class.getName(), actionRequest);
+
+				Locale defaultLocale = LocaleUtil.fromLanguageId(languageId);
+
+				for (int i = 1; i <= Integer.parseInt(numberOfRoles); i++) {
+					if (Integer.parseInt(numberOfRoles) >= 100) {
+						if (i == (int) (Double.parseDouble(numberOfRoles) * (loader / 100))) {
+							_log.info("Creating documents..." + (int) loader + "% done");
+							loader = loader + 10;
+						}
+					}
+
+					StringBundler title = new StringBundler(2);
+					title.append(baseRole);
+					title.append(i);
+
+					Map<Locale, String> titleMap = new HashMap<Locale, String>();
+					titleMap.put(defaultLocale, title.toString());
+
+					Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+					descriptionMap.put(defaultLocale, title.toString());
+
+					RoleServiceUtil.addRole(
+						null, //classname
+						0, //classPK
+						title.toString(), //name
+						titleMap, //titleMap
+						descriptionMap, //descriptionMap
+						type, //type
+						StringPool.BLANK, //subtype
+						serviceContext); //serviceContext
+
+					SessionMessages.add(actionRequest, "success");
+				}
+				_log.info("Finished creating " + numberOfRoles + " roles");
+
+			}
+			else {
+				if (Validator.isNull(numberOfRoles)) {
+					SessionErrors.add(actionRequest, "numberOfRolesError");
+				}
+
+				if (Validator.isNull(baseRole)) {
+					SessionErrors.add(actionRequest, "baseRoleNameError");
+				}
+			}
+		}
+		catch (DuplicateRoleException e) {
+			SessionErrors.add(actionRequest, "duplicateRoleName");
+		}
+		catch (NumberFormatException e) {
+			SessionErrors.add(actionRequest, "mustEnterNumberArticles");
+		}
+		catch (PrincipalException e) {
+			SessionErrors.add(actionRequest, "mustBeSignedIn");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		CreateAllTheThingsPortlet.class);
 }

@@ -1,10 +1,9 @@
-<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <%@ include file="/html/init.jsp" %>
 
 <%
 String tabs1 = ParamUtil.getString(request, "tabs1", "Create Organizations");
 
-String tabNames = "Create Organizations,Create Sites,Create Pages,Create Users,Create Web Content Articles,Create Documents";
+String tabNames = "Create Organizations,Create Sites,Create Pages,Create Users,Create Web Content Articles,Create Documents,Create Roles";
 %>
 
 <liferay-portlet:renderURL var="portletURL"/>
@@ -46,6 +45,11 @@ String tabNames = "Create Organizations,Create Sites,Create Pages,Create Users,C
 <liferay-ui:error key="baseDocumentNameError" message="Please enter the base name for the documents (i.e. doc, newDoc, testDoc)" />
 <liferay-ui:error key="mustEnterNumberDocuments" message="You have entered invalid data for the number of documents. Please enter an integer value and try again." />
 <liferay-ui:error key="noGroup" message="Cannot assign documents to group; group does not exist. Please try again." />
+<!-- Create Roles Errors-->
+<liferay-ui:error key="duplicateRoleName" message="One or more roles already exist with the name you've entered. Please try again." />
+<liferay-ui:error key="numberOfRolesError" message="Please enter the number of roles you would like to create" />
+<liferay-ui:error key="baseRoleNameError" message="Please enter the base name for the role (i.e. role, newRole, testRole)" />
+<liferay-ui:error key="mustEnterNumberRoles" message="You have entered invalid data for the number of roles. Please enter an integer value and try again." />
 
 <liferay-ui:tabs
 	names="<%= tabNames %>"
@@ -360,11 +364,57 @@ if (tabs1.equals("Create Documents")) {
 			for (Group group : groups) {
 				if (group.isSite() && !group.getDescriptiveName().equals("Control Panel")) {
 			%>
-			<aui:option label="<%= group.getDescriptiveName() %>" />
+					<aui:option label="<%= group.getDescriptiveName() %>" />
 			<%
 				}
 			}
 			%>
+		</aui:select><br />
+
+		<aui:button type="submit" />
+	</aui:form>
+<%
+}
+%>
+
+<%
+if (tabs1.equals("Create Roles")) {
+%>
+	<portlet:actionURL var="createRolesURL">
+		<portlet:param name="mvcPath" value="/html/view.jsp" />
+	</portlet:actionURL>
+
+	<h4>This portlet creates roles with minimal information.</h4><br />
+
+	Example: if you enter the values "3" and "role" the portlet will create three roles: role1, role2, and role3.<br /><br />
+
+	*You must be signed in as an administrator in order to create roles<br />
+	*The counter always starts at 1<br />
+	*If no role type is selected, the default type will be "Regular Role"<br /><br />
+
+
+	<h5>Creating Large Batches of Roles</h5>
+	*If the number of roles is large (over 100), go to <i>Control Panel -> Server Administration -> Log Levels -> Add Category</i>, and add "com.liferay.custom" and set to "INFO" to track progress (batches of 10%)<br />
+	*It may take some time (even for the logs to show) to create a large number of roles, and the page will hang until the process is complete; you can query the database if you are uncertain of the progress<br /><br /><br />
+
+	<%
+	String numberOfRolesLabel= "Enter the number of roles you would like to create";
+	String baseRoleLabel= "Enter the base role name (i.e. role, newRole, testRole)";
+	String roleLabel = "(OPTIONAL) Select the type of Role";
+	String defaultOption = "(None)";
+	%>
+
+	<aui:form action="<%= createRolesURL %>" method="post">
+		<aui:input name="numberOfRoles" label="<%= numberOfRolesLabel %>" /><br />
+		<aui:input name="baseRole" label="<%= baseRoleLabel %>" /><br />
+		<aui:input name="languageId" type="hidden" value="<%= user.getLanguageId() %>" />
+		<aui:input name="tab" type="hidden" value="<%= tabs1 %>" />
+
+		<aui:select name="roleType" label="<%= roleLabel %>" >
+			<aui:option label="<%= defaultOption %>" />
+			<aui:option label="Regular Role" value="regular" />
+			<aui:option label="Organization Role" value="organization" />
+			<aui:option label="Site Role" value="site" />
 		</aui:select><br />
 
 		<aui:button type="submit" />
