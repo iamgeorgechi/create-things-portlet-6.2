@@ -910,10 +910,10 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 		boolean value = false;
 
-		if (Validator.isNull(numberOfPages)) {
+		if (Validator.isNull(numberOfPages) && Validator.isNotNull(basePageName)) {
 			SessionErrors.add(actionRequest, "numberOfChildPagesError");
 		}
-		else {
+		else if (Validator.isNotNull(numberOfPages)) {
 			try  {
 				Integer.parseInt(numberOfPages);
 				value = true;
@@ -923,7 +923,7 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 			}
 		}
 
-		if (Validator.isNull(basePageName)) {
+		if (Validator.isNull(basePageName) && Validator.isNotNull(numberOfPages)) {
 			SessionErrors.add(actionRequest, "baseChildPageNameError");
 		}
 
