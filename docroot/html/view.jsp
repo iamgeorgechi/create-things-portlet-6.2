@@ -23,7 +23,10 @@ String tabNames = "Create Organizations,Create Sites,Create Pages,Create Users,C
 <!-- Create Pages Errors-->
 <liferay-ui:error key="numberOfPagesError" message="Please enter the number of pages you would like to create" />
 <liferay-ui:error key="basePageNameError" message="Please enter the base name for the pages (i.e. newPage, page, testPage)" />
+<liferay-ui:error key="numberOfChildPagesError" message="Please enter the number of child pages you would like to create" />
+<liferay-ui:error key="baseChildPageNameError" message="Please enter the base name for the child pages (i.e. newChildPage, childPage, testChildPage)" />
 <liferay-ui:error key="mustEnterNumberPages" message="You have entered invalid data for the number of pages. Please enter an integer value and try again." />
+<liferay-ui:error key="mustEnterNumberChildPages" message="You have entered invalid data for the number of child pages. Please enter an integer value and try again." />
 <!-- Create Users Errors-->
 <liferay-ui:error key="numberOfUsersError" message="Please enter the number of users you would like to create" />
 <liferay-ui:error key="baseScreenNameError" message="Please enter the base screenName for the users (i.e. newUser, testUser, user)" />
@@ -153,6 +156,9 @@ if (tabs1.equals("Create Pages")) {
 	String basePageLabel= "Enter the base page name (i.e. newPage, page, testPage)";
 	String groupLabel = "(OPTIONAL) Select a site to assign the pages to";
 
+	String numberOfChildPagesLabel= "(OPTIONAL) Enter the number of pages you would like to create";
+	String baseChildPageLabel= "(OPTIONAL) Enter the base child page name (i.e. newChildPage, childPage, testChildPage)";
+
 	List<Group> groups = GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 	String defaultOption = "(None)";
 	%>
@@ -177,6 +183,9 @@ if (tabs1.equals("Create Pages")) {
 	}
 	%>
 	</aui:select><br />
+
+	<aui:input name="numberOfChildPages" label="<%= numberOfChildPagesLabel %>" /><br />
+	<aui:input name="baseChildPage" label="<%= baseChildPageLabel %>" /><br />
 
 	<aui:button type="submit" />
 	</aui:form>
