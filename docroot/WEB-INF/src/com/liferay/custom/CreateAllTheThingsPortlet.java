@@ -195,13 +195,13 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					siteName.append(i);
 
 					GroupServiceUtil.addGroup(
-							siteName.toString(), //name
-							StringPool.BLANK, //description
-							1, //type
-							StringPool.BLANK, //friendlyURL
-							true, //site
-							true, //active
-							serviceContext); //serviceContext
+						siteName.toString(), //name
+						StringPool.BLANK, //description
+						1, //type
+						StringPool.BLANK, //friendlyURL
+						true, //site
+						true, //active
+						serviceContext); //serviceContext
 
 					SessionMessages.add(actionRequest, "success");
 				}
@@ -491,37 +491,37 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					emailAddress.append("@liferay.com");
 
 					UserServiceUtil.addUser(
-							companyId, //companyId
-							false, //autopassword
-							"test", //password1
-							"test", //password2
-							false, //autoscreenname
-							screenName.toString(), //screenname
-							emailAddress.toString(), //emailAddress
-							0, //facebookId
-							StringPool.BLANK, //openId
-							LocaleUtil.getDefault(), //locale
-							baseScreenName, //firstName
-							StringPool.BLANK, //middleName
-							String.valueOf(i), //lastName
-							0, //prefixId
-							0, //suffixId
-							true, //male
-							0, //birthdayDay
-							1, //birthdayMonth
-							1970, //birthdayYear
-							StringPool.BLANK, //jobTitle
-							groupIds, //groupIds
-							organizationIds, //organizationIds
-							roleIds, //roleIds
-							null, //usergroupIds
-							Collections.<Address>emptyList(), //addresses
-							Collections.<EmailAddress>emptyList(), //emailAddresses
-							Collections.<Phone>emptyList(), //phones
-							Collections.<Website>emptyList(), //websites
-							Collections.<AnnouncementsDelivery>emptyList(), //announcementsDelivers
-							false, //sendEmail
-							serviceContext); //serviceContext
+						companyId, //companyId
+						false, //autopassword
+						"test", //password1
+						"test", //password2
+						false, //autoscreenname
+						screenName.toString(), //screenname
+						emailAddress.toString(), //emailAddress
+						0, //facebookId
+						StringPool.BLANK, //openId
+						LocaleUtil.getDefault(), //locale
+						baseScreenName, //firstName
+						StringPool.BLANK, //middleName
+						String.valueOf(i), //lastName
+						0, //prefixId
+						0, //suffixId
+						true, //male
+						0, //birthdayDay
+						1, //birthdayMonth
+						1970, //birthdayYear
+						StringPool.BLANK, //jobTitle
+						groupIds, //groupIds
+						organizationIds, //organizationIds
+						roleIds, //roleIds
+						null, //usergroupIds
+						Collections.<Address>emptyList(), //addresses
+						Collections.<EmailAddress>emptyList(), //emailAddresses
+						Collections.<Phone>emptyList(), //phones
+						Collections.<Website>emptyList(), //websites
+						Collections.<AnnouncementsDelivery>emptyList(), //announcementsDelivers
+						false, //sendEmail
+						serviceContext); //serviceContext
 
 					SessionMessages.add(actionRequest, "success");
 				}
@@ -623,43 +623,43 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					content.append("</static-content></root>");
 
 					JournalArticleServiceUtil.addArticle(
-							groupId, //groupId
-							0, //folderId
-							0, //classnameId
-							0, //classpk
-							StringPool.BLANK, //articleId
-							true, //autoArticleId
-							titleMap, //titleMap
-							descriptionMap, //descriptionMap
-							content.toString(), //content
-							"general", //type
-							StringPool.BLANK, //structureId
-							StringPool.BLANK, //templateId
-							null, //layoutUuid
-							1, //displayDateMonth
-							1, //displayDateDay
-							2014, //displayDateYear
-							1, //displayDateHour
-							30, //displayDateMinute
-							0, //expirationDateMonth
-							0, //expirationDateDay
-							0, //expirationDateYear
-							0, //expirationDateHour
-							0, //expirationDateMinute
-							true, //neverExpire
-							0, //reviewDateMonth
-							0, //reviewDateDay
-							0, //reviewDateYear
-							0, //reviewDateHour
-							0, //reviewDateMinute
-							true, //neverReview
-							true, //indexable
-							false, //smallImage
-							StringPool.BLANK, //smallImageURL
-							null, //small file
-							Collections.EMPTY_MAP, //images
-							StringPool.BLANK, //articleURL
-							serviceContext); //serviceContext
+						groupId, //groupId
+						0, //folderId
+						0, //classnameId
+						0, //classpk
+						StringPool.BLANK, //articleId
+						true, //autoArticleId
+						titleMap, //titleMap
+						descriptionMap, //descriptionMap
+						content.toString(), //content
+						"general", //type
+						StringPool.BLANK, //structureId
+						StringPool.BLANK, //templateId
+						null, //layoutUuid
+						1, //displayDateMonth
+						1, //displayDateDay
+						2014, //displayDateYear
+						1, //displayDateHour
+						30, //displayDateMinute
+						0, //expirationDateMonth
+						0, //expirationDateDay
+						0, //expirationDateYear
+						0, //expirationDateHour
+						0, //expirationDateMinute
+						true, //neverExpire
+						0, //reviewDateMonth
+						0, //reviewDateDay
+						0, //reviewDateYear
+						0, //reviewDateHour
+						0, //reviewDateMinute
+						true, //neverReview
+						true, //indexable
+						false, //smallImage
+						StringPool.BLANK, //smallImageURL
+						null, //small file
+						Collections.EMPTY_MAP, //images
+						StringPool.BLANK, //articleURL
+						serviceContext); //serviceContext
 
 					SessionMessages.add(actionRequest, "success");
 				}
@@ -724,7 +724,7 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 				_log.info("Starting to create " + numberOfDocuments + " documents");
 
 				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-						DLFileEntry.class.getName(), actionRequest);
+					DLFileEntry.class.getName(), actionRequest);
 
 				for (int i = 1; i <= Integer.parseInt(numberOfDocuments); i++) {
 					if (Integer.parseInt(numberOfDocuments) >= 100) {
@@ -743,16 +743,16 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					sourceFileName.append(".txt");
 
 					DLAppServiceUtil.addFileEntry(
-							groupId, //repositoryId
-							0, //folderId
-							sourceFileName.toString(), //sourceFileName
-							"application/octet-stream", //contentType
-							title.toString(), //title
-							title.toString(), //description
-							StringPool.BLANK, //changeLog
-							null, //inputStream
-							0, //size
-							serviceContext); //serviceContext
+						groupId, //repositoryId
+						0, //folderId
+						sourceFileName.toString(), //sourceFileName
+						"application/octet-stream", //contentType
+						title.toString(), //title
+						title.toString(), //description
+						StringPool.BLANK, //changeLog
+						null, //inputStream
+						0, //size
+						serviceContext); //serviceContext
 
 					SessionMessages.add(actionRequest, "success");
 				}
@@ -836,14 +836,14 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					descriptionMap.put(defaultLocale, title.toString());
 
 					RoleServiceUtil.addRole(
-							null, //classname
-							0, //classPK
-							title.toString(), //name
-							titleMap, //titleMap
-							descriptionMap, //descriptionMap
-							type, //type
-							StringPool.BLANK, //subtype
-							serviceContext); //serviceContext
+						null, //classname
+						0, //classPK
+						title.toString(), //name
+						titleMap, //titleMap
+						descriptionMap, //descriptionMap
+						type, //type
+						StringPool.BLANK, //subtype
+						serviceContext); //serviceContext
 
 					SessionMessages.add(actionRequest, "success");
 				}
