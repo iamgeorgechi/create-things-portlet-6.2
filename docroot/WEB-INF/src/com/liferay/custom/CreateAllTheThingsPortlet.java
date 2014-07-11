@@ -299,18 +299,18 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					robotsMap.put(defaultLocale, StringPool.BLANK);
 
 					LayoutServiceUtil.addLayout(
-							groupId, //groupId
-							false, //privateLayout
-							0, //parentLayoutId
-							nameMap, //nameMap
-							titleMap, //titleMap
-							descriptionMap, //descriptionMap
-							keywordsMap, //keywordsMap
-							robotsMap, //robotsMap
-							"portlet", //type
-							false, //hidden
-							StringPool.BLANK, //friendlyURL
-							serviceContext); //serviceContext
+						groupId, //groupId
+						false, //privateLayout
+						0, //parentLayoutId
+						nameMap, //nameMap
+						titleMap, //titleMap
+						descriptionMap, //descriptionMap
+						keywordsMap, //keywordsMap
+						robotsMap, //robotsMap
+						"portlet", //type
+						false, //hidden
+						StringPool.BLANK, //friendlyURL
+						serviceContext); //serviceContext
 
 					SessionMessages.add(actionRequest, "success");
 				}
