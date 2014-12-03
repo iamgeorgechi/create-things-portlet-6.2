@@ -8,13 +8,11 @@ import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.NoSuchOrganizationException;
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -32,7 +30,6 @@ import com.liferay.portal.model.Website;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.GroupServiceUtil;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.OrganizationServiceUtil;
@@ -98,22 +95,30 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 	private void createOrganizations(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		String numberOfOrganizations = actionRequest.getParameter("numberOfOrganizations");
-		String baseOrganizationName = actionRequest.getParameter("baseOrganizationName");
+		String numOrgs = actionRequest.getParameter("numberOfOrganizations");
+		String baseOrganizationName = actionRequest.getParameter(
+			"baseOrganizationName");
 
 		double loader = 10;
 
 		try {
-			if (Validator.isNotNull(numberOfOrganizations) && Validator.isNotNull(baseOrganizationName)) {
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-					Organization.class.getName(), actionRequest);
+			if (Validator.isNotNull(numOrgs) &&
+					Validator.isNotNull(baseOrganizationName)) {
 
-				_log.info("Starting to create " + numberOfOrganizations + " organizations");
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						Organization.class.getName(), actionRequest);
 
-				for (int i = 1; i <= Integer.parseInt(numberOfOrganizations); i++) {
-					if (Integer.parseInt(numberOfOrganizations) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfOrganizations) * (loader / 100))) {
-							_log.info("Creating organizations..." + (int) loader + "% done");
+				_log.info(
+					"Starting to create " + numOrgs + " organizations");
+
+				for (int i = 1; i <= Integer.parseInt(numOrgs); i++) {
+					if (Integer.parseInt(numOrgs) >= 100) {
+						if (i == (int)(Double.parseDouble(numOrgs) *
+								(loader / 100))) {
+							_log.info(
+								"Creating organizations..." + (int) loader +
+									"% done");
 							loader = loader + 10;
 						}
 					}
@@ -141,15 +146,17 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 					SessionMessages.add(actionRequest, "success");
 				}
-				_log.info("Finished creating " + numberOfOrganizations + " organizations");
+				_log.info("Finished creating " + numOrgs + " organizations");
 			}
 			else {
-				if (Validator.isNull(numberOfOrganizations)) {
-					SessionErrors.add(actionRequest, "numberOfOrganizationsError");
+				if (Validator.isNull(numOrgs)) {
+					SessionErrors.add(
+						actionRequest, "numberOfOrganizationsError");
 				}
 
 				if (Validator.isNull(baseOrganizationName)) {
-					SessionErrors.add(actionRequest, "baseOrganizationNameError");
+					SessionErrors.add(
+						actionRequest, "baseOrganizationNameError");
 				}
 			}
 		}
@@ -176,16 +183,20 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		double loader = 10;
 
 		try {
-			if (Validator.isNotNull(numberOfSites) && Validator.isNotNull(baseSiteName)) {
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-					Group.class.getName(), actionRequest);
+			if (Validator.isNotNull(numberOfSites) &&
+					Validator.isNotNull(baseSiteName)) {
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						Group.class.getName(), actionRequest);
 
 				_log.info("Starting to create " + numberOfSites + " sites");
 
 				for (int i = 1; i <= Integer.parseInt(numberOfSites); i++) {
 					if (Integer.parseInt(numberOfSites) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfSites) * (loader / 100))) {
-							_log.info("Creating sites..." + (int) loader + "% done");
+						if (i == (int) (Double.parseDouble(numberOfSites) *
+								(loader / 100))) {
+							_log.info(
+								"Creating sites..." + (int) loader + "% done");
 							loader = loader + 10;
 						}
 					}
@@ -240,26 +251,36 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		String languageId = actionRequest.getParameter("languageId");
 		String groupDescriptiveName = actionRequest.getParameter("group");
 
-		String numberOfChildPages = actionRequest.getParameter("numberOfChildPages");
+		String numChildPages = actionRequest.getParameter(
+			"numberOfChildPages");
 		String baseChildPage = actionRequest.getParameter("baseChildPage");
 
 		Locale defaultLocale = LocaleUtil.fromLanguageId(languageId);
 
-		boolean parentPagesGood = areParentPagesGood(actionRequest, numberOfPages, basePage);
-		boolean childPagesGood = areChildPagesGood(actionRequest, numberOfChildPages, baseChildPage);
+		boolean parentPagesGood = areParentPagesGood(
+			actionRequest, numberOfPages, basePage);
+		boolean childPagesGood = areChildPagesGood(
+			actionRequest, numChildPages, baseChildPage);
 
 		Long groupId = null;
 
 		double loader = 10;
 
 		try {
-			if (parentPagesGood && !childPagesGood && Validator.isNull(numberOfChildPages) && Validator.isNull(baseChildPage)) {
+			if (parentPagesGood && !childPagesGood &&
+					Validator.isNull(numChildPages) &&
+					Validator.isNull(baseChildPage)) {
+
 				if (groupDescriptiveName.equals("(None)")) {
 					groupId = Long.parseLong(defaultGroupId);
 				}
 				else {
-					for (Group targetGroup : GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
-						if (groupDescriptiveName.equals(targetGroup.getDescriptiveName())) {
+					for (Group targetGroup : GroupLocalServiceUtil.getGroups(
+							QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+
+						if (groupDescriptiveName.equals(
+								targetGroup.getDescriptiveName())) {
+
 							groupId = targetGroup.getGroupId();
 							break;
 						}
@@ -268,13 +289,16 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 				_log.info("Starting to create " + numberOfPages + " pages");
 
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-					Layout.class.getName(), actionRequest);
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						Layout.class.getName(), actionRequest);
 
 				for (int i = 1; i <= Integer.parseInt(numberOfPages); i++) {
 					if (Integer.parseInt(numberOfPages) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfPages) * (loader / 100))) {
-							_log.info("Creating pages..." + (int) loader + "% done");
+						if (i == (int) (Double.parseDouble(numberOfPages) *
+								(loader / 100))) {
+							_log.info(
+								"Creating pages..." + (int) loader + "% done");
 							loader = loader + 10;
 						}
 					}
@@ -321,8 +345,10 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					groupId = Long.parseLong(defaultGroupId);
 				}
 				else {
-					for (Group targetGroup : GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
-						if (groupDescriptiveName.equals(targetGroup.getDescriptiveName())) {
+					for (Group targetGroup : GroupLocalServiceUtil.getGroups(
+							QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+						if (groupDescriptiveName.equals(
+								targetGroup.getDescriptiveName())) {
 							groupId = targetGroup.getGroupId();
 							break;
 						}
@@ -331,13 +357,16 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 				_log.info("Starting to create " + numberOfPages + " pages");
 
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
 						Layout.class.getName(), actionRequest);
 
 				for (int i = 1; i <= Integer.parseInt(numberOfPages); i++) {
 					if (Integer.parseInt(numberOfPages) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfPages) * (loader / 100))) {
-							_log.info("Creating pages..." + (int) loader + "% done");
+						if (i == (int) (Double.parseDouble(numberOfPages) *
+								(loader / 100))) {
+							_log.info(
+								"Creating pages..." + (int) loader + "% done");
 							loader = loader + 10;
 						}
 					}
@@ -375,7 +404,7 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 						StringPool.BLANK, //friendlyURL
 						serviceContext); //serviceContext
 
-					for (int j = 1; j <= Integer.parseInt(numberOfChildPages); j++) {
+					for (int j = 1; j <= Integer.parseInt(numChildPages); j++) {
 						StringBundler childName = new StringBundler(3);
 						childName.append(name.toString());
 						childName.append(baseChildPage);
@@ -387,11 +416,11 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 						Map<Locale, String> childNameMap = new HashMap<Locale, String>();
 						childNameMap.put(defaultLocale, childName.toString());
 
-						Map<Locale, String> childDescriptionMap = new HashMap<Locale, String>();
-						childDescriptionMap.put(defaultLocale, childName.toString());
+						Map<Locale, String> childDescMap = new HashMap<Locale, String>();
+						childDescMap.put(defaultLocale, childName.toString());
 
-						Map<Locale, String> childKeywordsMap = new HashMap<Locale, String>();
-						childKeywordsMap.put(defaultLocale, childName.toString());
+						Map<Locale, String> childKeysMap = new HashMap<Locale, String>();
+						childKeysMap.put(defaultLocale, childName.toString());
 
 						Map<Locale, String> childRobotsMap = new HashMap<Locale, String>();
 						childRobotsMap.put(defaultLocale, StringPool.BLANK);
@@ -402,8 +431,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 							parentLayout.getLayoutId(), //parentLayoutId
 							childNameMap, //nameMap
 							childTitleMap, //titleMap
-							childDescriptionMap, //descriptionMap
-							childKeywordsMap, //keywordsMap
+							childDescMap, //descriptionMap
+							childKeysMap, //keywordsMap
 							childRobotsMap, //robotsMap
 							"portlet", //type
 							false, //hidden
@@ -450,13 +479,16 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 		try {
 			if (!organizationName.equals("(None)")) {
-				organization = OrganizationLocalServiceUtil.getOrganization(companyId, organizationName);
+				organization = OrganizationLocalServiceUtil.getOrganization(
+					companyId, organizationName);
 				organizationIds = new long[]{organization.getOrganizationId()};
 			}
 
 			if (!groupDescriptiveName.equals("(None)")) {
-				for (Group targetGroup : GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
-					if (groupDescriptiveName.equals(targetGroup.getDescriptiveName())) {
+				for (Group targetGroup : GroupLocalServiceUtil.getGroups(
+						QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+					if (groupDescriptiveName.equals(
+							targetGroup.getDescriptiveName())) {
 						group = targetGroup;
 						break;
 					}
@@ -469,15 +501,21 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 				roleIds = new long[]{role.getRoleId()};
 			}
 
-			if (Validator.isNotNull(numberOfUsers) && Validator.isNotNull(baseScreenName)) {
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(User.class.getName(), actionRequest);
+			if (Validator.isNotNull(numberOfUsers) &&
+					Validator.isNotNull(baseScreenName)) {
+
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						User.class.getName(), actionRequest);
 
 				_log.info("Starting to create " + numberOfUsers + " users");
 
 				for (int i = 1; i <= Integer.parseInt(numberOfUsers); i++) {
 					if (Integer.parseInt(numberOfUsers) >= 100) {
-						if (i == (int)(Double.parseDouble(numberOfUsers) * (loader / 100))) {
-							_log.info("Creating users..." + (int)loader + "% done");
+						if (i == (int)(Double.parseDouble(numberOfUsers) *
+								(loader / 100))) {
+							_log.info(
+								"Creating users..." + (int)loader + "% done");
 							loader = loader + 10;
 						}
 					}
@@ -563,7 +601,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 	private void createWebContentArticles(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		String numberOfArticles = actionRequest.getParameter("numberOfArticles");
+		String numberOfArticles = actionRequest.getParameter(
+			"numberOfArticles");
 		String baseArticle = actionRequest.getParameter("baseArticle");
 		String defaultGroupId = actionRequest.getParameter("groupId");
 		String languageId = actionRequest.getParameter("languageId");
@@ -574,31 +613,40 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		double loader = 10;
 
 		try {
-			if (Validator.isNotNull(numberOfArticles) && Validator.isNotNull(baseArticle)) {
+			if (Validator.isNotNull(numberOfArticles) &&
+					Validator.isNotNull(baseArticle)) {
 
 				if (groupDescriptiveName.equals("(None)")) {
 					groupId = Long.parseLong(defaultGroupId);
 				}
 				else {
-					for (Group targetGroup : GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
-						if (groupDescriptiveName.equals(targetGroup.getDescriptiveName())) {
+					for (Group targetGroup : GroupLocalServiceUtil.getGroups(
+							QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+						if (groupDescriptiveName.equals(
+								targetGroup.getDescriptiveName())) {
 							groupId = targetGroup.getGroupId();
 							break;
 						}
 					}
 				}
 
-				_log.info("Starting to create " + numberOfArticles + " web content articles");
+				_log.info(
+					"Starting to create " + numberOfArticles +
+						" web content articles");
 
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-					JournalArticle.class.getName(), actionRequest);
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						JournalArticle.class.getName(), actionRequest);
 
 				Locale defaultLocale = LocaleUtil.fromLanguageId(languageId);
 
 				for (int i = 1; i <= Integer.parseInt(numberOfArticles); i++) {
 					if (Integer.parseInt(numberOfArticles) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfArticles) * (loader / 100))) {
-							_log.info("Creating documents..." + (int) loader + "% done");
+						if (i == (int) (Double.parseDouble(numberOfArticles) *
+								(loader / 100))) {
+							_log.info(
+								"Creating documents..." + (int) loader +
+									"% done");
 							loader = loader + 10;
 						}
 					}
@@ -613,9 +661,10 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
 					descriptionMap.put(defaultLocale, title.toString());
 
-					StringBundler content = new StringBundler(4);
+					StringBundler content = new StringBundler(8);
 					content.append("<?xml version='1.0' encoding='UTF-8'?>");
-					content.append("<root available-locales=\"en_US\" default-locale=\"en_US\">");
+					content.append("<root available-locales=\"en_US\" ");
+					content.append("default-locale=\"en_US\">");
 					content.append("<static-content language-id=\"en_US\">");
 					content.append("<![CDATA[");
 					content.append(baseArticle);
@@ -663,7 +712,9 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 					SessionMessages.add(actionRequest, "success");
 				}
-				_log.info("Finished creating " + numberOfArticles + " web content articles");
+				_log.info(
+					"Finished creating " + numberOfArticles +
+						" web content articles");
 			}
 			else {
 				if (Validator.isNull(numberOfArticles)) {
@@ -695,7 +746,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 	private void createDocuments(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
 
-		String numberOfDocuments = actionRequest.getParameter("numberOfDocuments");
+		String numberOfDocuments = actionRequest.getParameter(
+			"numberOfDocuments");
 		String baseDocument = actionRequest.getParameter("baseDocument");
 		String defaultGroupId = actionRequest.getParameter("groupId");
 		String groupDescriptiveName = actionRequest.getParameter("group");
@@ -705,7 +757,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		double loader = 10;
 
 		try {
-			if (Validator.isNotNull(numberOfDocuments) && Validator.isNotNull(baseDocument)) {
+			if (Validator.isNotNull(numberOfDocuments) &&
+					Validator.isNotNull(baseDocument)) {
 
 				if (groupDescriptiveName.equals("(None)")) {
 					groupId = Long.parseLong(defaultGroupId);
@@ -714,22 +767,28 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					for (Group targetGroup : GroupLocalServiceUtil.getGroups(
 							QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
 
-						if (groupDescriptiveName.equals(targetGroup.getDescriptiveName())) {
+						if (groupDescriptiveName.equals(
+								targetGroup.getDescriptiveName())) {
 							groupId = targetGroup.getGroupId();
 							break;
 						}
 					}
 				}
 
-				_log.info("Starting to create " + numberOfDocuments + " documents");
+				_log.info(
+					"Starting to create " + numberOfDocuments + " documents");
 
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-					DLFileEntry.class.getName(), actionRequest);
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						DLFileEntry.class.getName(), actionRequest);
 
 				for (int i = 1; i <= Integer.parseInt(numberOfDocuments); i++) {
 					if (Integer.parseInt(numberOfDocuments) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfDocuments) * (loader / 100))) {
-							_log.info("Creating documents..." + (int) loader + "% done");
+						if (i == (int) (Double.parseDouble(numberOfDocuments) *
+								(loader / 100))) {
+							_log.info(
+								"Creating documents..." + (int) loader +
+									"% done");
 							loader = loader + 10;
 						}
 					}
@@ -756,7 +815,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 					SessionMessages.add(actionRequest, "success");
 				}
-				_log.info("Finished creating " + numberOfDocuments + " documents");
+				_log.info(
+					"Finished creating " + numberOfDocuments + " documents");
 			}
 			else {
 				if (Validator.isNull(numberOfDocuments)) {
@@ -808,19 +868,26 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 		}
 
 		try{
-			if (Validator.isNotNull(numberOfRoles) && Validator.isNotNull(baseRole)) {
+			if (Validator.isNotNull(numberOfRoles) &&
+					Validator.isNotNull(baseRole)) {
 
-				_log.info("Starting to create " + numberOfRoles + " web content articles");
+				_log.info(
+					"Starting to create " + numberOfRoles +
+						" web content articles");
 
-				ServiceContext serviceContext = ServiceContextFactory.getInstance(
-					Role.class.getName(), actionRequest);
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						Role.class.getName(), actionRequest);
 
 				Locale defaultLocale = LocaleUtil.fromLanguageId(languageId);
 
 				for (int i = 1; i <= Integer.parseInt(numberOfRoles); i++) {
 					if (Integer.parseInt(numberOfRoles) >= 100) {
-						if (i == (int) (Double.parseDouble(numberOfRoles) * (loader / 100))) {
-							_log.info("Creating documents..." + (int) loader + "% done");
+						if (i == (int) (Double.parseDouble(numberOfRoles) *
+								(loader / 100))) {
+							_log.info(
+								"Creating documents..." + (int) loader +
+									"% done");
 							loader = loader + 10;
 						}
 					}
@@ -910,7 +977,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 
 		boolean value = false;
 
-		if (Validator.isNull(numberOfPages) && Validator.isNotNull(basePageName)) {
+		if (Validator.isNull(numberOfPages) &&
+				Validator.isNotNull(basePageName)) {
 			SessionErrors.add(actionRequest, "numberOfChildPagesError");
 		}
 		else if (Validator.isNotNull(numberOfPages)) {
@@ -923,7 +991,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 			}
 		}
 
-		if (Validator.isNull(basePageName) && Validator.isNotNull(numberOfPages)) {
+		if (Validator.isNull(basePageName) &&
+				Validator.isNotNull(numberOfPages)) {
 			SessionErrors.add(actionRequest, "baseChildPageNameError");
 		}
 

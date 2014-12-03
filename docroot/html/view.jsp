@@ -1,9 +1,9 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-String tabs1 = ParamUtil.getString(request, "tabs1", "Create Organizations");
+String tabs1 = ParamUtil.getString(request, "tabs1", "Create Documents");
 
-String tabNames = "Create Organizations,Create Sites,Create Pages,Create Users,Create Web Content Articles,Create Documents,Create Roles";
+String tabNames = "Create Documents,Create Organizations,Create Pages,Create Roles,Create Sites,Create Users,Create Web Content Articles";
 %>
 
 <liferay-portlet:renderURL var="portletURL"/>
