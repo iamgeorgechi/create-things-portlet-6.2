@@ -797,14 +797,10 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					title.append(baseDocument);
 					title.append(i);
 
-					StringBundler sourceFileName = new StringBundler(2);
-					sourceFileName.append(title.toString());
-					sourceFileName.append(".txt");
-
 					DLAppServiceUtil.addFileEntry(
 						groupId, //repositoryId
 						0, //folderId
-						sourceFileName.toString(), //sourceFileName
+						StringPool.BLANK, //sourceFileName
 						"application/octet-stream", //contentType
 						title.toString(), //title
 						title.toString(), //description
