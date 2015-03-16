@@ -1,3 +1,4 @@
+<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <%@ include file="/html/init.jsp" %>
 
 <%
@@ -156,7 +157,7 @@ if (tabs1.equals("Create Pages")) {
 	String basePageLabel= "Enter the base page name (i.e. newPage, page, testPage)";
 	String groupLabel = "(OPTIONAL) Select a site to assign the pages to";
 
-	String numberOfChildPagesLabel= "(OPTIONAL) Enter the number of pages you would like to create";
+	String numberOfChildPagesLabel= "(OPTIONAL) Enter the number of child pages you would like to create";
 	String baseChildPageLabel= "(OPTIONAL) Enter the base child page name (i.e. newChildPage, childPage, testChildPage)";
 
 	List<Group> groups = GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
