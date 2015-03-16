@@ -18,4 +18,4 @@
 
 <portlet:defineObjects />
 
-This is the <b>Create All the Things 6.2</b> portlet.
+This is the <b>Create All the Things for Liferay Master</b> portlet.

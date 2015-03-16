@@ -3,6 +3,6 @@
 
 <display>
 	<category name="category.sample">
-		<portlet id="create-all-the-things-6.2" />
+		<portlet id="create-all-the-things-master" />
 	</category>
 </display>
