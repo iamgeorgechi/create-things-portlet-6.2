@@ -681,10 +681,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 						titleMap, //titleMap
 						descriptionMap, //descriptionMap
 						content.toString(), //content
-						//ddmStructureKey
-						//ddmTemplateKey
-						StringPool.BLANK, //structureId
-						StringPool.BLANK, //templateId
+						StringPool.BLANK, //ddmStructureKey
+						StringPool.BLANK, //ddmTemplateKey
 						null, //layoutUuid
 						1, //displayDateMonth
 						1, //displayDateDay
