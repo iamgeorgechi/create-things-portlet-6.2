@@ -42,6 +42,7 @@ import com.liferay.portlet.announcements.model.AnnouncementsDelivery;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -662,14 +663,14 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 					descriptionMap.put(defaultLocale, title.toString());
 
 					StringBundler content = new StringBundler(8);
-					content.append("<?xml version='1.0' encoding='UTF-8'?>");
-					content.append("<root available-locales=\"en_US\" ");
-					content.append("default-locale=\"en_US\">");
-					content.append("<static-content language-id=\"en_US\">");
-					content.append("<![CDATA[");
-					content.append(baseArticle);
-					content.append("]]>");
-					content.append("</static-content></root>");
+					content.append("<?xml version=\"1.0\"?>");
+					content.append("<root available-locales=\"en_US\" default-locale=\"en_US\">");
+					content.append("<dynamic-element name=\"content\" type=\"text_area\" index-type=\"keyword\" index=\"0\" instance-id=\"ilvi\">");
+					content.append("<dynamic-content language-id=\"en_US\"><![CDATA[");
+					content.append(title.toString());
+					content.append("]]></dynamic-content>");
+					content.append("</dynamic-element>");
+					content.append("</root>");
 
 					JournalArticleServiceUtil.addArticle(
 						groupId, //groupId
@@ -681,8 +682,8 @@ public class CreateAllTheThingsPortlet extends MVCPortlet {
 						titleMap, //titleMap
 						descriptionMap, //descriptionMap
 						content.toString(), //content
-						StringPool.BLANK, //ddmStructureKey
-						StringPool.BLANK, //ddmTemplateKey
+						"BASIC-WEB-CONTENT", //ddmStructureKey
+						"20305", //ddmTemplateKey
 						null, //layoutUuid
 						1, //displayDateMonth
 						1, //displayDateDay
