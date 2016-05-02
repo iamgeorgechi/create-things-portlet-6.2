@@ -682,9 +682,9 @@ public class CreateThingsPortlet extends MVCPortlet {
 						titleMap, //titleMap
 						descriptionMap, //descriptionMap
 						content.toString(), //content
-						null, //type
-						"BASIC-WEB-CONTENT", //ddmStructureKey
-						"20305", //ddmTemplateKey
+						"general", //type
+						StringPool.BLANK, //structureId
+						StringPool.BLANK, //templateId
 						null, //layoutUuid
 						1, //displayDateMonth
 						1, //displayDateDay
