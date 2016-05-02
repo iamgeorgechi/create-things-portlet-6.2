@@ -59,7 +59,7 @@ import java.util.Map;
 /**
  * @author georgechi
  */
-public class CreateAllTheThingsPortlet extends MVCPortlet {
+public class CreateThingsPortlet extends MVCPortlet {
 	@Override
 	public void processAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
