@@ -682,6 +682,7 @@ public class CreateThingsPortlet extends MVCPortlet {
 						titleMap, //titleMap
 						descriptionMap, //descriptionMap
 						content.toString(), //content
+						null, //type
 						"BASIC-WEB-CONTENT", //ddmStructureKey
 						"20305", //ddmTemplateKey
 						null, //layoutUuid
@@ -1000,5 +1001,5 @@ public class CreateThingsPortlet extends MVCPortlet {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(
-		CreateAllTheThingsPortlet.class);
+		CreateThingsPortlet.class);
 }

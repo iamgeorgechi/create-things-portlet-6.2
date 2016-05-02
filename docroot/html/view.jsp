@@ -117,7 +117,7 @@ if (tabs1.equals("Create Sites")) {
 
 	<%
 	String numberOfSitesLabel = "Enter the number of sites you would like to create";
-	String baseSiteNameLabel = "Enter the base name for the sites";
+	String baseSiteNameLabel = "Enter the base name for the sites (i.e. newSite, testSite, site)";
 	%>
 
 	<aui:form action="<%= createSitesURL %>" method="post">
